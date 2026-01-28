@@ -3,38 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>와치타워 부품 계산기</title>
+    <title>S242 SYNERGY Calc | NOBODY</title>
     <style>
-        body { font-family: 'Malgun Gothic', sans-serif; padding: 20px; line-height: 1.6; background-color: #f0f2f5; }
+        :root {
+            --primary-color: #3498db;
+            --accent-color: #e67e22;
+            --bg-color: #1a1c20;
+            --card-bg: #ffffff;
+            --text-main: #2c3e50;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; line-height: 1.6; background-color: var(--bg-color); color: var(--text-main); }
         .container { max-width: 900px; margin: auto; display: flex; flex-direction: column; gap: 20px; }
-        .calc-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #2c3e50; margin-bottom: 25px; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
-        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .input-group { margin-bottom: 15px; }
-        .full-width { grid-column: span 2; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.85em; color: #555; }
-        select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; background-color: #fff; cursor: pointer; }
-        .result-box { margin-top: 25px; padding: 20px; background: #eef7ff; border-radius: 10px; text-align: center; border: 1px solid #d1e9ff; }
-        .total { font-size: 1.8em; font-weight: bold; color: #007bff; }
         
-        /* 테이블 스타일 */
-        .table-card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.82em; text-align: center; min-width: 600px; }
-        th, td { padding: 12px 8px; border: 1px solid #eee; }
-        th { background-color: #f8f9fa; color: #333; font-weight: bold; }
-        .highlight-tower { background-color: #fff4e6; font-weight: bold; }
-        .highlight-pre { background-color: #fff9db; text-align: left; padding-left: 15px; color: #d9480f; }
-        .footer-note { font-size: 0.75em; color: #888; margin-top: 10px; }
+        .header-credit { text-align: right; color: #aaa; font-size: 0.8em; margin-bottom: -10px; letter-spacing: 1px; }
+        .header-credit b { color: var(--primary-color); }
+
+        .calc-card { background: var(--card-bg); padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-top: 5px solid var(--primary-color); }
+        h2 { text-align: center; color: var(--text-main); margin-bottom: 25px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
+        
+        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .full-width { grid-column: span 2; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.85em; color: #666; }
+        select { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #eee; background-color: #fff; cursor: pointer; font-size: 14px; transition: 0.3s; }
+        select:focus { border-color: var(--primary-color); outline: none; }
+        
+        .result-box { margin-top: 30px; padding: 25px; background: #f8faff; border-radius: 15px; text-align: center; border: 2px dashed #d1e9ff; }
+        .result-label { font-size: 0.9em; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+        .total { font-size: 2.2em; font-weight: 900; color: var(--primary-color); margin-top: 5px; }
+        
+        .table-card { background: var(--card-bg); padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h3 { color: var(--text-main); font-size: 1.1em; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        h3::before { content: ''; width: 4px; height: 18px; background: var(--primary-color); display: inline-block; }
+        
+        .table-wrapper { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85em; min-width: 600px; }
+        th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: center; }
+        th { background-color: #fcfcfc; color: #333; font-weight: 700; text-transform: uppercase; }
+        .highlight-tower { font-weight: bold; color: var(--accent-color); }
+        .highlight-pre { text-align: left; color: #e67e22; font-size: 0.9em; }
+
+        .footer-credit { text-align: center; margin-top: 20px; padding: 20px; color: #666; font-size: 0.9em; border-top: 1px solid #333; }
+        .footer-credit b { color: #fff; background: var(--primary-color); padding: 2px 8px; border-radius: 4px; }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <div class="header-credit">SYSTEM DESIGNED BY <b>NOBODY (S242)</b></div>
+    
     <div class="calc-card">
-        <h2>Watch Tower Calculator</h2>
+        <h2>Watch Tower Calc</h2>
         <div class="grid-inputs">
             <div class="input-group full-width">
-                <label>목표 산업 레벨 (Target Level)</label>
+                <label>목표 산업 레벨 (Target Industrial Level)</label>
                 <select id="targetLvl" onchange="calculate()"></select>
             </div>
             <div class="input-group"><label>현재 타워 (Watch Tower)</label><select id="curTower" onchange="calculate()"></select></div>
@@ -45,43 +66,43 @@
         </div>
 
         <div class="result-box">
-            <div style="font-size: 0.9em; color: #666;">필요한 총 정밀 부품 (Precision Parts)</div>
+            <div class="result-label">Total Precision Parts Required</div>
             <div class="total" id="result">0</div>
         </div>
     </div>
 
     <div class="table-card">
-        <h3 style="text-align: center; color: #444; margin-bottom: 15px;">[참조 데이터] 레벨별 소모 부품 및 선행조건</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>구분</th>
-                    <th class="highlight-tower">Watch Tower</th>
-                    <th>Guild</th>
-                    <th>Troop Camp</th>
-                    <th class="highlight-pre">선행조건 (Prerequisite)</th>
-                </tr>
-            </thead>
-            <tbody id="dataTableBody">
-                </tbody>
-        </table>
-        <p class="footer-note">* 병종 캠프(슈터/라이더/파이터)의 레벨별 소모량은 동일합니다.</p>
-        <p class="footer-note">* 선행조건 로테이션: 슈터 → 라이더 → 파이터 순으로 순환합니다.</p>
+        <h3>Reference Data & Prerequisites</h3>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Level</th>
+                        <th>Watch Tower</th>
+                        <th>Guild</th>
+                        <th>Troop Camp</th>
+                        <th style="text-align:left">Prerequisite (선행조건)</th>
+                    </tr>
+                </thead>
+                <tbody id="dataTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="footer-credit">
+        Made by <b>NOBODY (S242)</b> | Optimized for 242 & SYNERGY
     </div>
 </div>
 
 <script>
-    // 원본 데이터
     const data = {
         tower: [0, 900, 1100, 1300, 1550, 1850, 1500, 1600, 1750],
         guild: [0, 250, 250, 300, 350, 450, 350, 400, 500],
         camp:  [0, 400, 450, 550, 650, 800, 600, 700, 800]
     };
 
-    // 선행조건 텍스트 생성
     const preReqs = [
-        "-",
-        "-",
+        "-", "-",
         "산업1 연맹홀 + 산업1 슈터",
         "산업2 연맹홀 + 산업2 라이더",
         "산업3 연맹홀 + 산업3 파이터",
@@ -94,19 +115,9 @@
     function getRequiredCampLvl(target, type) {
         if (target < 2) return 0;
         const reqLvl = target - 1;
-        if (type === 'shooter') {
-            if (reqLvl >= 7) return 7;
-            if (reqLvl >= 4) return 4;
-            if (reqLvl >= 1) return 1;
-        }
-        if (type === 'rider') {
-            if (reqLvl >= 5) return 5;
-            if (reqLvl >= 2) return 2;
-        }
-        if (type === 'fighter') {
-            if (reqLvl >= 6) return 6;
-            if (reqLvl >= 3) return 3;
-        }
+        if (type === 'shooter') return [1, 4, 7].includes(reqLvl) ? reqLvl : (reqLvl > 7 ? 7 : (reqLvl > 4 ? 4 : (reqLvl > 1 ? 1 : 0)));
+        if (type === 'rider') return [2, 5].includes(reqLvl) ? reqLvl : (reqLvl > 5 ? 5 : (reqLvl > 2 ? 2 : 0));
+        if (type === 'fighter') return [3, 6].includes(reqLvl) ? reqLvl : (reqLvl > 6 ? 6 : (reqLvl > 3 ? 3 : 0));
         return 0;
     }
 
@@ -125,14 +136,13 @@
 
         const tbody = document.getElementById('dataTableBody');
         for(let i=1; i<=8; i++) {
-            let row = `<tr>
+            tbody.innerHTML += `<tr>
                 <td>산업${i}</td>
                 <td class="highlight-tower">${data.tower[i].toLocaleString()}</td>
                 <td>${data.guild[i].toLocaleString()}</td>
                 <td>${data.camp[i].toLocaleString()}</td>
                 <td class="highlight-pre">${preReqs[i]}</td>
             </tr>`;
-            tbody.innerHTML += row;
         }
     }
 
@@ -157,7 +167,7 @@
             for (let i = cur.rider + 1; i <= reqR; i++) total += data.camp[i];
             for (let i = cur.fighter + 1; i <= reqF; i++) total += data.camp[i];
         }
-        document.getElementById('result').innerText = total.toLocaleString() + " 개";
+        document.getElementById('result').innerText = total.toLocaleString();
     }
 
     init();
