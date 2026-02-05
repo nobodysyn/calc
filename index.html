@@ -3,175 +3,291 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S242 SYNERGY Calc | NOBODY</title>
+    <title>S242 SYNERGY Toolkit | NOBODY</title>
     <style>
-        :root {
-            --primary-color: #3498db;
-            --accent-color: #e67e22;
-            --bg-color: #1a1c20;
-            --card-bg: #ffffff;
-            --text-main: #2c3e50;
-        }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 20px; line-height: 1.6; background-color: var(--bg-color); color: var(--text-main); }
-        .container { max-width: 900px; margin: auto; display: flex; flex-direction: column; gap: 20px; }
-        
-        .header-credit { text-align: right; color: #aaa; font-size: 0.8em; margin-bottom: -10px; letter-spacing: 1px; }
-        .header-credit b { color: var(--primary-color); }
+        :root { --primary: #3498db; --bg: #121212; --card: #1e1e1e; --text: #e0e0e0; --accent: #e67e22; --danger: #ff4d4d; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        .sidebar { width: 80px; background: #000; display: flex; flex-direction: column; align-items: center; padding-top: 20px; border-left: 1px solid #333; order: 2; }
+        .nav-item { color: #888; cursor: pointer; margin-bottom: 25px; font-size: 0.8em; text-align: center; transition: 0.3s; }
+        .nav-item:hover, .nav-item.active { color: var(--primary); }
+        .main-content { flex: 1; padding: 20px 30px; overflow-y: auto; order: 1; }
+        .section { display: none; max-width: 800px; margin: auto; }
+        .section.active { display: block; }
 
-        .calc-card { background: var(--card-bg); padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-top: 5px solid var(--primary-color); }
-        h2 { text-align: center; color: var(--text-main); margin-bottom: 25px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
-        
-        .grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .full-width { grid-column: span 2; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.85em; color: #666; }
-        select { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #eee; background-color: #fff; cursor: pointer; font-size: 14px; transition: 0.3s; }
-        select:focus { border-color: var(--primary-color); outline: none; }
-        
-        .result-box { margin-top: 30px; padding: 25px; background: #f8faff; border-radius: 15px; text-align: center; border: 2px dashed #d1e9ff; }
-        .result-label { font-size: 0.9em; color: #888; text-transform: uppercase; letter-spacing: 1px; }
-        .total { font-size: 2.2em; font-weight: 900; color: var(--primary-color); margin-top: 5px; }
-        
-        .table-card { background: var(--card-bg); padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        h3 { color: var(--text-main); font-size: 1.1em; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
-        h3::before { content: ''; width: 4px; height: 18px; background: var(--primary-color); display: inline-block; }
-        
-        .table-wrapper { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.85em; min-width: 600px; }
-        th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: center; }
-        th { background-color: #fcfcfc; color: #333; font-weight: 700; text-transform: uppercase; }
-        .highlight-tower { font-weight: bold; color: var(--accent-color); }
-        .highlight-pre { text-align: left; color: #e67e22; font-size: 0.9em; }
+        .lang-switch { position: absolute; top: 20px; left: 20px; z-index: 100; display: flex; gap: 5px; }
+        .lang-btn { background: #333; border: 1px solid #444; color: #fff; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px; }
+        .lang-btn.active { background: var(--primary); border-color: var(--primary); }
 
-        .footer-credit { text-align: center; margin-top: 20px; padding: 20px; color: #666; font-size: 0.9em; border-top: 1px solid #333; }
-        .footer-credit b { color: #fff; background: var(--primary-color); padding: 2px 8px; border-radius: 4px; }
+        .clock-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 25px; }
+        .clock-card { background: var(--card); padding: 15px 10px; border-radius: 12px; text-align: center; border-top: 3px solid var(--primary); }
+        .clock-date { font-size: 0.75em; color: var(--primary); margin-bottom: 5px; font-weight: bold; }
+        .clock-time { font-size: 1.3em; font-weight: bold; color: #fff; }
+        .clock-label { font-size: 0.7em; color: #aaa; margin-top: 6px; letter-spacing: 0.5px; }
+        
+        .card { background: var(--card); padding: 20px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        h2 { color: var(--primary); margin-top: 0; font-size: 1.5em; }
+        label { display: block; margin-top: 10px; font-size: 0.85em; color: #bbb; }
+        select, input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #333; background: #252525; color: #fff; margin-top: 5px; box-sizing: border-box; }
+        .result-box { margin-top: 20px; padding: 15px; background: #1a2a3a; border-radius: 10px; text-align: center; border: 1px solid var(--primary); }
+        .total-val { font-size: 2.2em; font-weight: 900; color: var(--primary); }
+        .need-val { font-size: 1.5em; font-weight: 700; color: var(--danger); margin-top: 5px; }
+        .calc-nav { display: flex; gap: 8px; margin-bottom: 15px; }
+        .calc-btn { flex: 1; background: #333; border: none; color: #fff; padding: 10px; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+        .calc-btn.active { background: var(--primary); }
+        .pre-req { color: var(--danger); font-size: 0.85em; margin-top: 8px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header-credit">SYSTEM DESIGNED BY <b>NOBODY (S242)</b></div>
-    
-    <div class="calc-card">
-        <h2>Watch Tower Calc</h2>
-        <div class="grid-inputs">
-            <div class="input-group full-width">
-                <label>목표 산업 레벨 (Target Industrial Level)</label>
-                <select id="targetLvl" onchange="calculate()"></select>
+    <div class="lang-switch">
+        <button class="lang-btn active" id="btn-ko" onclick="setLang('ko')">KOR</button>
+        <button class="lang-btn" id="btn-en" onclick="setLang('en')">ENG</button>
+    </div>
+
+    <div class="sidebar">
+        <div class="nav-item active" onclick="showSection('main')" data-key="nav-main">🏠<br>메인</div>
+        <div class="nav-item" onclick="showSection('calc')" data-key="nav-calc">📊<br>계산기</div>
+        <div class="nav-item" onclick="showSection('info')" data-key="nav-info">📜<br>공략</div>
+    </div>
+
+    <div class="main-content">
+        <div style="text-align: right; color: #555; font-size: 0.75em; margin-bottom: 10px;">Made by NOBODY(S242)</div>
+
+        <div id="section-main" class="section active">
+            <h2 data-key="clock-title">Global & Server Clocks</h2>
+            <div class="clock-grid">
+                <div class="clock-card" style="border-top-color: var(--accent);">
+                    <div class="clock-date" id="date-server">-</div>
+                    <div class="clock-time" id="time-server">00:00:00</div>
+                    <div class="clock-label" data-key="label-server">SERVER (KOR-11h)</div>
+                </div>
+                <div class="clock-card">
+                    <div class="clock-date" id="date-kor">-</div>
+                    <div class="clock-time" id="time-kor">00:00:00</div>
+                    <div class="clock-label" data-key="label-kor">KOREA</div>
+                </div>
+                <div class="clock-card">
+                    <div class="clock-date" id="date-haw">-</div>
+                    <div class="clock-time" id="time-haw">00:00:00</div>
+                    <div class="clock-label" data-key="label-haw">HAWAII</div>
+                </div>
+                <div class="clock-card">
+                    <div class="clock-date" id="date-bra">-</div>
+                    <div class="clock-time" id="time-bra">00:00:00</div>
+                    <div class="clock-label" data-key="label-bra">BRAZIL</div>
+                </div>
+                <div class="clock-card">
+                    <div class="clock-date" id="date-ind">-</div>
+                    <div class="clock-time" id="time-ind">00:00:00</div>
+                    <div class="clock-label" data-key="label-ind">INDIA</div>
+                </div>
+                <div class="clock-card">
+                    <div class="clock-date" id="date-aus">-</div>
+                    <div class="clock-time" id="time-aus">00:00:00</div>
+                    <div class="clock-label" data-key="label-aus">AUSTRALIA</div>
+                </div>
             </div>
-            <div class="input-group"><label>현재 타워 (Watch Tower)</label><select id="curTower" onchange="calculate()"></select></div>
-            <div class="input-group"><label>현재 연맹홀 (Guild)</label><select id="curGuild" onchange="calculate()"></select></div>
-            <div class="input-group"><label>현재 슈터 (Shooter)</label><select id="curShooter" onchange="calculate()"></select></div>
-            <div class="input-group"><label>현재 라이더 (Rider)</label><select id="curRider" onchange="calculate()"></select></div>
-            <div class="input-group"><label>현재 파이터 (Fighter)</label><select id="curFighter" onchange="calculate()"></select></div>
+            <div class="card">
+                <h3 data-key="notice-title">Alliance SYNERGY Notice</h3>
+                <p style="color: #aaa; font-size: 0.9em;" data-key="notice-desc">- Optimized for 242 & SYNERGY.<br>- 날짜 및 요일 표시 기능이 추가되었습니다.</p>
+            </div>
         </div>
 
-        <div class="result-box">
-            <div class="result-label">Total Precision Parts Required</div>
-            <div class="total" id="result">0</div>
+        <div id="section-calc" class="section">
+            <div class="calc-nav">
+                <button class="calc-btn active" onclick="showCalc('tower')" data-key="btn-tower-calc">부품 계산기</button>
+                <button class="calc-btn" onclick="showCalc('hero')" data-key="btn-hero-calc">영웅/무기 승급</button>
+            </div>
+            <div id="calc-tower" class="calc-sub">
+                <div class="card">
+                    <h2 data-key="tower-title">Watch Tower Calc</h2>
+                    <label data-key="tower-target-lbl">목표 산업 레벨</label>
+                    <select id="towerTarget" onchange="calcTower()"></select>
+                    <div id="towerPreReq" class="pre-req"></div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+                        <div><label data-key="cur-tower-lbl">현재 타워</label><select id="curTower" onchange="calcTower()"></select></div>
+                        <div><label data-key="cur-guild-lbl">현재 연맹홀</label><select id="curGuild" onchange="calcTower()"></select></div>
+                        <div><label data-key="cur-shooter-lbl">현재 슈터</label><select id="curShooter" onchange="calcTower()"></select></div>
+                        <div><label data-key="cur-rider-lbl">현재 라이더</label><select id="curRider" onchange="calcTower()"></select></div>
+                        <div><label data-key="cur-fighter-lbl">현재 파이터</label><select id="curFighter" onchange="calcTower()"></select></div>
+                    </div>
+                    <label style="margin-top: 15px;" data-key="tower-have-lbl">현재 보유 정밀 부품</label>
+                    <input type="number" id="towerHave" oninput="calcTower()">
+                    <div class="result-box">
+                        <div style="font-size: 0.8em; color: #888;" data-key="res-total-lbl">필요한 총 부품</div>
+                        <div class="total-val" id="towerTotal">0</div>
+                        <div id="towerNeedBox" style="display:none; margin-top:10px; border-top: 1px solid #333; padding-top:10px;">
+                            <div style="font-size: 0.8em; color: var(--danger);" data-key="res-need-lbl">추가 획득 필요량</div>
+                            <div class="need-val" id="towerNeed">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="calc-hero" class="calc-sub" style="display:none;">
+                <div class="card">
+                    <h2 data-key="hero-title">Upgrade Calc</h2>
+                    <label data-key="hero-type-lbl">유형</label>
+                    <select id="heroType" onchange="calcHero()">
+                        <option value="hero" data-key="opt-hero">영웅 (Hero)</option>
+                        <option value="weapon" data-key="opt-weapon">전용 무기 (Exclusive Weapon)</option>
+                        <option value="awaken" data-key="opt-awaken">무기 각성 (Awakening)</option>
+                    </select>
+                    <label data-key="hero-cur-lbl">현재 상태 (0.2성 단위)</label>
+                    <select id="curStep" onchange="calcHero()"></select>
+                    <label data-key="hero-target-lbl">목표 상태</label>
+                    <select id="targetStep" onchange="calcHero()"></select>
+                    <label style="margin-top:15px;" data-key="hero-have-lbl">현재 보유 조각</label>
+                    <input type="number" id="heroHave" oninput="calcHero()">
+                    <div class="result-box">
+                        <div style="font-size: 0.8em; color: #888;" data-key="res-total-hero">필요한 총 조각</div>
+                        <div class="total-val" id="heroTotal">0</div>
+                        <div id="heroNeedBox" style="display:none; margin-top:10px; border-top: 1px solid #333; padding-top:10px;">
+                            <div style="font-size: 0.8em; color: var(--danger);" data-key="res-need-hero">추가 획득 필요량</div>
+                            <div class="need-val" id="heroNeed">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <div class="table-card">
-        <h3>Reference Data & Prerequisites</h3>
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Level</th>
-                        <th>Watch Tower</th>
-                        <th>Guild</th>
-                        <th>Troop Camp</th>
-                        <th style="text-align:left">Prerequisite (선행조건)</th>
-                    </tr>
-                </thead>
-                <tbody id="dataTableBody"></tbody>
-            </table>
+        <div id="section-info" class="section">
+            <div class="card"><h2 data-key="info-title">Strategy Center</h2><p style="color:#888;" data-key="info-desc">공략 데이터 준비 중...</p></div>
         </div>
+        <div style="text-align: center; font-size: 0.75em; color: #444; margin-top: 30px;">Made by NOBODY (S242) | Optimized for 242 & SYNERGY</div>
     </div>
-
-    <div class="footer-credit">
-        Made by <b>NOBODY (S242)</b> | Optimized for 242 & SYNERGY
-    </div>
-</div>
 
 <script>
-    const data = {
-        tower: [0, 900, 1100, 1300, 1550, 1850, 1500, 1600, 1750],
-        guild: [0, 250, 250, 300, 350, 450, 350, 400, 500],
-        camp:  [0, 400, 450, 550, 650, 800, 600, 700, 800]
+    let currentLang = 'ko';
+    const i18n = {
+        ko: {
+            'nav-main': '🏠<br>메인', 'nav-calc': '📊<br>계산기', 'nav-info': '📜<br>공략',
+            'clock-title': 'Global & Server Clocks', 'label-server': 'SERVER (KOR-11h)', 'label-kor': 'KOREA', 'label-haw': 'HAWAII', 'label-bra': 'BRAZIL', 'label-ind': 'INDIA', 'label-aus': 'AUSTRALIA',
+            'notice-title': 'Alliance SYNERGY Notice', 'notice-desc': '- Optimized for 242 & SYNERGY.<br>- 날짜 및 요일 표시 기능이 추가되었습니다.',
+            'btn-tower-calc': '부품 계산기', 'btn-hero-calc': '영웅/무기 승급',
+            'tower-title': 'Watch Tower Calc', 'tower-target-lbl': '목표 산업 레벨', 'cur-tower-lbl': '현재 타워', 'cur-guild-lbl': '현재 연맹홀', 'cur-shooter-lbl': '현재 슈터', 'cur-rider-lbl': '현재 라이더', 'cur-fighter-lbl': '현재 파이터',
+            'tower-have-lbl': '현재 보유 정밀 부품', 'res-total-lbl': '필요한 총 부품', 'res-need-lbl': '추가 획득 필요량',
+            'hero-title': 'Upgrade Calc', 'hero-type-lbl': '유형', 'opt-hero': '영웅 (Hero)', 'opt-weapon': '전용 무기 (Exclusive Weapon)', 'opt-awaken': '무기 각성 (Awakening)',
+            'hero-cur-lbl': '현재 상태 (0.2성 단위)', 'hero-target-lbl': '목표 상태', 'hero-have-lbl': '현재 보유 조각', 'res-total-hero': '필요한 총 조각', 'res-need-hero': '추가 획득 필요량',
+            'info-title': 'Strategy Center', 'info-desc': '공략 데이터 준비 중...', 'unit': ' 개', 'pre-warn': '⚠️ 선행조건: ',
+            'labels': ["해제 전", "해제완료(1성)", "1.2성", "1.4성", "1.6성", "1.8성", "2성", "2.2성", "2.4성", "2.6성", "2.8성", "3성", "3.2성", "3.4성", "3.6성", "3.8성", "4성", "4.2성", "4.4성", "4.6성", "4.8성", "5성", "5성(1)", "5성(2)", "5성(3)", "5성(Max)"],
+            'tower-names': ["", "", "산업1 연맹홀 + 산업1 슈터", "산업2 연맹홀 + 산업2 라이더", "산업3 연맹홀 + 산업3 파이터", "산업4 연맹홀 + 산업4 슈터", "산업5 연맹홀 + 산업5 라이더", "산업6 연맹홀 + 산업6 파이터", "산업7 연맹홀 + 산업7 슈터"]
+        },
+        en: {
+            'nav-main': '🏠<br>Main', 'nav-calc': '📊<br>Calc', 'nav-info': '📜<br>Guide',
+            'clock-title': 'Global & Server Clocks', 'label-server': 'SERVER (KOR-11h)', 'label-kor': 'KOREA', 'label-haw': 'HAWAII', 'label-bra': 'BRAZIL', 'label-ind': 'INDIA', 'label-aus': 'AUSTRALIA',
+            'notice-title': 'Alliance SYNERGY Notice', 'notice-desc': '- Optimized for 242 & SYNERGY.<br>- Date and Day display added.',
+            'btn-tower-calc': 'Parts Calc', 'btn-hero-calc': 'Hero/Weapon Upgrade',
+            'tower-title': 'Watch Tower Calc', 'tower-target-lbl': 'Target Industrial Level', 'cur-tower-lbl': 'Watch Tower', 'cur-guild-lbl': 'Alliance Hall', 'cur-shooter-lbl': 'Shooter Camp', 'cur-rider-lbl': 'Rider Camp', 'cur-fighter-lbl': 'Fighter Camp',
+            'tower-have-lbl': 'Current Precision Parts', 'res-total-lbl': 'Total Parts Required', 'res-need-lbl': 'Remaining Parts Needed',
+            'hero-title': 'Upgrade Calc', 'hero-type-lbl': 'Type', 'opt-hero': 'Hero', 'opt-weapon': 'Exclusive Weapon', 'opt-awaken': 'Awakening',
+            'hero-cur-lbl': 'Current State (0.2★)', 'hero-target-lbl': 'Target State', 'hero-have-lbl': 'Current Shards', 'res-total-hero': 'Total Shards Required', 'res-need-hero': 'Remaining Shards Needed',
+            'info-title': 'Strategy Center', 'info-desc': 'Guides under development...', 'unit': ' Qty', 'pre-warn': '⚠️ Prerequisite: ',
+            'labels': ["Locked", "Unlocked(1★)", "1.2★", "1.4★", "1.6★", "1.8★", "2★", "2.2★", "2.4★", "2.6★", "2.8★", "3★", "3.2★", "3.4★", "3.6★", "3.8★", "4★", "4.2★", "4.4★", "4.6★", "4.8★", "5★", "5★(1)", "5★(2)", "5★(3)", "5★(Max)"],
+            'tower-names': ["", "", "Lv1 Hall + Lv1 Shooter", "Lv2 Hall + Lv2 Rider", "Lv3 Hall + Lv3 Fighter", "Lv4 Hall + Lv4 Shooter", "Lv5 Hall + Lv5 Rider", "Lv6 Hall + Lv6 Fighter", "Lv7 Hall + Lv7 Shooter"]
+        }
     };
 
-    const preReqs = [
-        "-", "-",
-        "산업1 연맹홀 + 산업1 슈터",
-        "산업2 연맹홀 + 산업2 라이더",
-        "산업3 연맹홀 + 산업3 파이터",
-        "산업4 연맹홀 + 산업4 슈터",
-        "산업5 연맹홀 + 산업5 라이더",
-        "산업6 연맹홀 + 산업6 파이터",
-        "산업7 연맹홀 + 산업7 슈터"
-    ];
-
-    function getRequiredCampLvl(target, type) {
-        if (target < 2) return 0;
-        const reqLvl = target - 1;
-        if (type === 'shooter') return [1, 4, 7].includes(reqLvl) ? reqLvl : (reqLvl > 7 ? 7 : (reqLvl > 4 ? 4 : (reqLvl > 1 ? 1 : 0)));
-        if (type === 'rider') return [2, 5].includes(reqLvl) ? reqLvl : (reqLvl > 5 ? 5 : (reqLvl > 2 ? 2 : 0));
-        if (type === 'fighter') return [3, 6].includes(reqLvl) ? reqLvl : (reqLvl > 6 ? 6 : (reqLvl > 3 ? 3 : 0));
-        return 0;
-    }
-
-    function init() {
-        const ids = ['targetLvl', 'curTower', 'curGuild', 'curShooter', 'curRider', 'curFighter'];
-        ids.forEach(id => {
-            const el = document.getElementById(id);
-            for(let i=0; i<=8; i++) {
-                if(id === 'targetLvl' && i === 0) continue;
-                let opt = document.createElement('option');
-                opt.value = i;
-                opt.innerText = (i === 0) ? '0 레벨' : '산업' + i;
-                el.appendChild(opt);
-            }
+    function setLang(lang) {
+        currentLang = lang;
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('btn-' + lang).classList.add('active');
+        document.querySelectorAll('[data-key]').forEach(el => {
+            const key = el.getAttribute('data-key');
+            if (i18n[lang][key]) el.innerHTML = i18n[lang][key];
         });
-
-        const tbody = document.getElementById('dataTableBody');
-        for(let i=1; i<=8; i++) {
-            tbody.innerHTML += `<tr>
-                <td>산업${i}</td>
-                <td class="highlight-tower">${data.tower[i].toLocaleString()}</td>
-                <td>${data.guild[i].toLocaleString()}</td>
-                <td>${data.camp[i].toLocaleString()}</td>
-                <td class="highlight-pre">${preReqs[i]}</td>
-            </tr>`;
-        }
+        refreshSelects(); calcTower(); calcHero(); updateClocks();
     }
 
-    function calculate() {
-        const target = parseInt(document.getElementById('targetLvl').value);
-        const cur = {
-            tower: parseInt(document.getElementById('curTower').value),
-            guild: parseInt(document.getElementById('curGuild').value),
-            shooter: parseInt(document.getElementById('curShooter').value),
-            rider: parseInt(document.getElementById('curRider').value),
-            fighter: parseInt(document.getElementById('curFighter').value)
+    function refreshSelects() {
+        const labels = i18n[currentLang]['labels'];
+        const cS_h = document.getElementById('curStep'), tS_h = document.getElementById('targetStep');
+        const cVal = cS_h.value, tVal = tS_h.value;
+        cS_h.innerHTML = ''; tS_h.innerHTML = '';
+        labels.forEach((l, i) => { cS_h.add(new Option(l, i)); tS_h.add(new Option(l, i)); });
+        cS_h.value = cVal; tS_h.value = tVal;
+        const tT = document.getElementById('towerTarget'), cT = document.getElementById('curTower'), cG = document.getElementById('curGuild'), cS = document.getElementById('curShooter'), cR = document.getElementById('curRider'), cF = document.getElementById('curFighter');
+        const tVal_t = tT.value, cT_v = cT.value, cG_v = cG.value, cS_v = cS.value, cR_v = cR.value, cF_v = cF.value;
+        tT.innerHTML = ''; cT.innerHTML = ''; cG.innerHTML = ''; cS.innerHTML = ''; cR.innerHTML = ''; cF.innerHTML = '';
+        const prefix = (currentLang === 'ko') ? '산업' : 'Ind. ';
+        for(let i=0; i<=8; i++) {
+            if(i>0) tT.add(new Option(prefix + i, i));
+            const optText = (i==0) ? (currentLang === 'ko' ? '0 레벨' : 'Lv 0') : prefix + i;
+            cT.add(new Option(optText, i)); cG.add(new Option(optText, i)); cS.add(new Option(optText, i)); cR.add(new Option(optText, i)); cF.add(new Option(optText, i));
+        }
+        tT.value = tVal_t; cT.value = cT_v; cG.value = cG_v; cS.value = cS_v; cR.value = cR_v; cF.value = cF_v;
+    }
+
+    function updateClocks() {
+        const now = new Date();
+        const timeOpt = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+        const dateOpt = { year: 'numeric', month: 'short', day: '2-digit', weekday: 'short' };
+        const langLocale = currentLang === 'ko' ? 'ko-KR' : 'en-US';
+
+        const zones = {
+            'kor': 'Asia/Seoul', 'haw': 'Pacific/Honolulu', 'bra': 'America/Sao_Paulo', 
+            'ind': 'Asia/Kolkata', 'aus': 'Australia/Sydney'
         };
 
-        let total = 0;
-        for (let i = cur.tower + 1; i <= target; i++) total += data.tower[i];
-        if (target >= 2) {
-            for (let i = cur.guild + 1; i <= target - 1; i++) total += data.guild[i];
-            const reqS = getRequiredCampLvl(target, 'shooter');
-            const reqR = getRequiredCampLvl(target, 'rider');
-            const reqF = getRequiredCampLvl(target, 'fighter');
-            for (let i = cur.shooter + 1; i <= reqS; i++) total += data.camp[i];
-            for (let i = cur.rider + 1; i <= reqR; i++) total += data.camp[i];
-            for (let i = cur.fighter + 1; i <= reqF; i++) total += data.camp[i];
+        for (const [key, zone] of Object.entries(zones)) {
+            document.getElementById(`date-${key}`).innerText = now.toLocaleDateString(langLocale, { ...dateOpt, timeZone: zone });
+            document.getElementById(`time-${key}`).innerText = now.toLocaleTimeString('ko-KR', { ...timeOpt, timeZone: zone });
         }
-        document.getElementById('result').innerText = total.toLocaleString();
+
+        const serverNow = new Date(now.getTime() - (11 * 60 * 60 * 1000));
+        document.getElementById('date-server').innerText = serverNow.toLocaleDateString(langLocale, dateOpt);
+        document.getElementById('time-server').innerText = serverNow.toLocaleTimeString('ko-KR', timeOpt);
+    }
+    setInterval(updateClocks, 1000);
+
+    const towerData = { tower: [0, 900, 1100, 1300, 1550, 1850, 1500, 1600, 1750], guild: [0, 250, 250, 300, 350, 450, 350, 400, 500], camp: [0, 400, 450, 550, 650, 800, 600, 700, 800] };
+
+    function calcTower() {
+        const target = parseInt(document.getElementById('towerTarget').value);
+        const preNames = i18n[currentLang]['tower-names'];
+        document.getElementById('towerPreReq').innerText = target >= 2 ? i18n[currentLang]['pre-warn'] + preNames[target] : "";
+        const cur = { t: parseInt(document.getElementById('curTower').value), g: parseInt(document.getElementById('curGuild').value), s: parseInt(document.getElementById('curShooter').value), r: parseInt(document.getElementById('curRider').value), f: parseInt(document.getElementById('curFighter').value) };
+        let total = 0;
+        for (let i = cur.t + 1; i <= target; i++) total += towerData.tower[i];
+        if (target >= 2) {
+            for (let i = cur.g + 1; i <= target - 1; i++) total += towerData.guild[i];
+            const rs = (target<2)?0:([1,4,7].includes(target-1)?target-1:(target-1>7?7:(target-1>4?4:(target-1>1?1:0))));
+            const rr = (target<2)?0:([2,5].includes(target-1)?target-1:(target-1>5?5:(target-1>2?2:0)));
+            const rf = (target<2)?0:([3,6].includes(target-1)?target-1:(target-1>6?6:(target-1>3?3:0)));
+            for (let i = cur.s + 1; i <= rs; i++) total += towerData.camp[i];
+            for (let i = cur.r + 1; i <= rr; i++) total += towerData.camp[i];
+            for (let i = cur.f + 1; i <= rf; i++) total += towerData.camp[i];
+        }
+        document.getElementById('towerTotal').innerText = total.toLocaleString() + i18n[currentLang]['unit'];
+        const have = parseInt(document.getElementById('towerHave').value) || 0;
+        if (have > 0 && total > have) {
+            document.getElementById('towerNeedBox').style.display = 'block';
+            document.getElementById('towerNeed').innerText = (total - have).toLocaleString() + i18n[currentLang]['unit'];
+        } else { document.getElementById('towerNeedBox').style.display = 'none'; }
     }
 
-    init();
-    calculate();
+    const heroData = { hero: { unlock: 10, costs: [0, 1, 1, 2, 3, 3, 5, 5, 5, 5, 15, 15, 15, 15, 15, 50, 50, 50, 50, 50, 100, 100, 100, 100, 100, 100] }, weapon: { unlock: 10, costs: [0, 1, 1, 3, 5, 7, 7, 7, 7, 7, 15, 15, 15, 15, 15, 25, 25, 25, 25, 25, 35, 35, 35, 35, 35, 35] }, awaken: { unlock: 100, costs: [0, 50, 50, 50, 50, 100, 100, 100, 100, 100, 120, 120, 120, 120, 120, 150, 150, 150, 150, 150, 200, 200, 200, 200, 200, 300] } };
+
+    function calcHero() {
+        const type = document.getElementById('heroType').value; const s = parseInt(document.getElementById('curStep').value); const e = parseInt(document.getElementById('targetStep').value); const info = heroData[type];
+        let total = 0; if (s === 0 && e >= 1) total += info.unlock;
+        for (let i = s + 1; i <= e; i++) { if (info.costs[i]) total += info.costs[i]; }
+        document.getElementById('heroTotal').innerText = (s >= e) ? "0" + i18n[currentLang]['unit'] : total.toLocaleString() + i18n[currentLang]['unit'];
+        const h = parseInt(document.getElementById('heroHave').value) || 0;
+        if (h > 0 && total > h) {
+            document.getElementById('heroNeedBox').style.display = 'block';
+            document.getElementById('heroNeed').innerText = (total - h).toLocaleString() + i18n[currentLang]['unit'];
+        } else { document.getElementById('heroNeedBox').style.display = 'none'; }
+    }
+
+    function showSection(id) { document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); document.getElementById('section-' + id).classList.add('active'); event.currentTarget.classList.add('active'); }
+    function showCalc(id) { document.querySelectorAll('.calc-sub').forEach(s => s.style.display = 'none'); document.querySelectorAll('.calc-btn').forEach(b => b.classList.remove('active')); document.getElementById('calc-' + id).style.display = 'block'; event.currentTarget.classList.add('active'); }
+
+    window.onload = () => {
+        updateClocks(); refreshSelects();
+        document.getElementById('towerTarget').value = 8;
+        document.getElementById('targetStep').value = 25;
+        setLang('ko');
+    };
 </script>
 </body>
 </html>
