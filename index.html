@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SYNERGY 242 Toolkit</title>
-    
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="SYNERGY 242">
@@ -14,45 +13,32 @@
     <style>
         :root { --primary: #3498db; --bg: #121212; --card: #1e1e1e; --text: #e0e0e0; --accent: #e67e22; --danger: #ff4d4d; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
-        
-        /* 사이드바 */
         .sidebar { width: 80px; background: #000; display: flex; flex-direction: column; align-items: center; padding-top: 20px; border-left: 1px solid #333; order: 2; }
         .nav-item { color: #888; cursor: pointer; margin-bottom: 25px; font-size: 0.8em; text-align: center; transition: 0.3s; }
         .nav-item:hover, .nav-item.active { color: var(--primary); }
-
-        /* 메인 영역 */
         .main-content { flex: 1; padding: 20px 30px; overflow-y: auto; order: 1; position: relative; }
         .section { display: none; max-width: 800px; margin: auto; }
         .section.active { display: block; }
-
-        /* 로고 디자인 */
         .logo-container { text-align: center; margin-bottom: 20px; }
         .main-logo { width: 100px; height: 100px; border-radius: 50%; border: 2px solid var(--primary); box-shadow: 0 0 15px rgba(52, 152, 219, 0.3); }
-
-        /* 다국어 스위치 */
         .lang-switch { position: absolute; top: 20px; left: 20px; z-index: 100; display: flex; gap: 5px; }
         .lang-btn { background: #333; border: 1px solid #444; color: #fff; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px; }
         .lang-btn.active { background: var(--primary); border-color: var(--primary); }
-
-        /* 시계 디자인 */
-        .clock-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-bottom: 25px; }
+        .clock-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 25px; }
         .clock-card { background: var(--card); padding: 15px 10px; border-radius: 12px; text-align: center; border-top: 3px solid var(--primary); }
         .clock-date { font-size: 0.75em; color: var(--primary); margin-bottom: 5px; font-weight: bold; }
-        .clock-time { font-size: 1.25em; font-weight: bold; color: #fff; }
+        .clock-time { font-size: 1.2em; font-weight: bold; color: #fff; }
         .clock-label { font-size: 0.7em; color: #aaa; margin-top: 6px; }
-        
-        /* 카드 및 입력창 */
         .card { background: var(--card); padding: 20px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
         h2 { color: var(--primary); margin-top: 0; font-size: 1.4em; }
         label { display: block; margin-top: 10px; font-size: 0.85em; color: #bbb; }
         select, input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #333; background: #252525; color: #fff; margin-top: 5px; box-sizing: border-box; }
-        
         .result-box { margin-top: 20px; padding: 15px; background: #1a2a3a; border-radius: 10px; text-align: center; border: 1px solid var(--primary); }
         .total-val { font-size: 2em; font-weight: 900; color: var(--primary); }
-        
         .calc-nav { display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; }
         .calc-btn { flex: 0 0 auto; background: #333; border: none; color: #fff; padding: 10px 15px; border-radius: 8px; cursor: pointer; transition: 0.2s; white-space: nowrap; }
         .calc-btn.active { background: var(--primary); }
+        .pre-req { color: var(--danger); font-size: 0.82em; margin-top: 10px; font-weight: bold; border-left: 3px solid var(--danger); padding-left: 10px; min-height: 1.2em; }
     </style>
 </head>
 <body>
@@ -72,22 +58,20 @@
         <div style="text-align: right; color: #555; font-size: 0.7em; margin-bottom: 10px;">Made by NOBODY(S242)</div>
 
         <div id="section-main" class="section active">
-            <div class="logo-container">
-                <img src="logo.jpg" alt="SYNERGY Logo" class="main-logo">
-            </div>
+            <div class="logo-container"><img src="logo.jpg" alt="SYNERGY Logo" class="main-logo"></div>
             <h2 data-key="clock-title" style="text-align: center;">World & Server Time</h2>
             <div class="clock-grid">
-                <div class="clock-card" style="border-top-color: var(--accent);"><div class="clock-date" id="date-server">-</div><div class="clock-time" id="time-server">00:00:00</div><div class="clock-label" data-key="label-server">SERVER (KOR-11h)</div></div>
+                <div class="clock-card" style="border-top-color: var(--accent);"><div class="clock-date" id="date-server">-</div><div class="clock-time" id="time-server">00:00:00</div><div class="clock-label" data-key="label-server">SERVER</div></div>
                 <div class="clock-card"><div class="clock-date" id="date-kor">-</div><div class="clock-time" id="time-kor">00:00:00</div><div class="clock-label" data-key="label-kor">KOREA</div></div>
-                <div class="clock-card"><div class="clock-date" id="date-haw">-</div><div class="clock-time" id="time-haw">00:00:00</div><div class="clock-label" data-key="label-haw">HAWAII</div></div>
-                <div class="clock-card"><div class="clock-date" id="date-bra">-</div><div class="clock-time" id="time-bra">00:00:00</div><div class="clock-label" data-key="label-bra">BRAZIL</div></div>
+                <div class="clock-card"><div class="clock-date" id="date-phl">-</div><div class="clock-time" id="time-phl">00:00:00</div><div class="clock-label" data-key="label-phl">PHILIPPINES</div></div>
+                <div class="clock-card"><div class="clock-date" id="date-tur">-</div><div class="clock-time" id="time-tur">00:00:00</div><div class="clock-label" data-key="label-tur">TURKEY</div></div>
+                <div class="clock-card"><div class="clock-date" id="date-fra">-</div><div class="clock-time" id="time-fra">00:00:00</div><div class="clock-label" data-key="label-fra">FRANCE</div></div>
                 <div class="clock-card"><div class="clock-date" id="date-ind">-</div><div class="clock-time" id="time-ind">00:00:00</div><div class="clock-label" data-key="label-ind">INDIA</div></div>
                 <div class="clock-card"><div class="clock-date" id="date-aus">-</div><div class="clock-time" id="time-aus">00:00:00</div><div class="clock-label" data-key="label-aus">AUSTRALIA</div></div>
+                <div class="clock-card"><div class="clock-date" id="date-bra">-</div><div class="clock-time" id="time-bra">00:00:00</div><div class="clock-label" data-key="label-bra">BRAZIL</div></div>
+                <div class="clock-card"><div class="clock-date" id="date-haw">-</div><div class="clock-time" id="time-haw">00:00:00</div><div class="clock-label" data-key="label-haw">HAWAII</div></div>
             </div>
-            <div class="card">
-                <h3 data-key="notice-title">SYNERGY 242</h3>
-                <p style="color: #aaa; font-size: 0.9em;" data-key="notice-desc">Optimized for 242 & SYNERGY. 웹앱 설치가 가능합니다.</p>
-            </div>
+            <div class="card"><h3 data-key="notice-title">SYNERGY 242</h3><p style="color: #aaa; font-size: 0.9em;" data-key="notice-desc">Optimized for 242 & SYNERGY.</p></div>
         </div>
 
         <div id="section-calc" class="section">
@@ -100,11 +84,14 @@
             <div id="calc-tower" class="calc-sub">
                 <div class="card">
                     <h2 data-key="tower-title">Precision Parts</h2>
-                    <label data-key="tower-target-lbl">목표 산업 레벨</label>
-                    <select id="towerTarget" onchange="calcTower()"></select>
+                    <label data-key="tower-target-lbl">목표 산업 레벨</label><select id="towerTarget" onchange="calcTower()"></select>
+                    <div id="towerPreReq" class="pre-req"></div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top:10px;">
                         <div><label data-key="cur-tower-lbl">현재 타워</label><select id="curTower" onchange="calcTower()"></select></div>
                         <div><label data-key="cur-guild-lbl">현재 연맹홀</label><select id="curGuild" onchange="calcTower()"></select></div>
+                        <div><label data-key="cur-shooter-lbl">현재 슈터</label><select id="curShooter" onchange="calcTower()"></select></div>
+                        <div><label data-key="cur-rider-lbl">현재 라이더</label><select id="curRider" onchange="calcTower()"></select></div>
+                        <div><label data-key="cur-fighter-lbl">현재 파이터</label><select id="curFighter" onchange="calcTower()"></select></div>
                     </div>
                     <div class="result-box"><div class="total-val" id="towerTotal">0</div></div>
                 </div>
@@ -147,29 +134,38 @@
     const i18n = {
         ko: {
             'nav-main': '🏠<br>메인', 'nav-calc': '📊<br>계산기', 'nav-info': '📜<br>공략',
-            'label-server': 'SERVER', 'notice-title': 'SYNERGY 242', 'unit': ' 개',
+            'clock-title': 'World & Server Time', 'label-server': 'SERVER', 'label-kor': 'KOREA', 'label-phl': 'PHILIPPINES', 'label-tur': 'TURKEY', 'label-fra': 'FRANCE', 'label-ind': 'INDIA', 'label-aus': 'AUSTRALIA', 'label-bra': 'BRAZIL', 'label-haw': 'HAWAII',
+            'notice-title': 'SYNERGY 242', 'notice-desc': 'Optimized for 242 & SYNERGY.', 'unit': ' 개',
             'btn-tower-calc': '부품', 'btn-hero-calc': '영웅 승급', 'btn-apc-calc': 'APC 칩',
-            'tower-title': '부품 계산기', 'hero-title': '영웅 승급', 'apc-title': 'APC 칩 계산기',
+            'tower-title': '부품 계산기', 'tower-target-lbl': '목표 산업 레벨', 'cur-tower-lbl': '현재 타워', 'cur-guild-lbl': '현재 연맹홀', 'cur-shooter-lbl': '현재 슈터', 'cur-rider-lbl': '현재 라이더', 'cur-fighter-lbl': '현재 파이터',
+            'hero-title': '영웅 승급', 'hero-type-lbl': '유형', 'opt-hero': '영웅', 'opt-weapon': '전용무기', 'opt-awaken': '무기각성', 'hero-cur-lbl': '현재 단계', 'hero-target-lbl': '목표 단계',
+            'apc-title': 'APC 칩 계산기', 'apc-cur-lbl': '현재 별', 'apc-target-lbl': '목표 별', 'apc-have-mat-lbl': '보유 고급원료',
+            'info-title': 'Guide', 'info-desc': '연맹 공략 준비 중...',
+            'pre-warn': '⚠️ 선행 조건: ', 'lv': '레벨', 'ind': '산업',
+            'tower-pre': ["", "", "산업1 연맹홀 + 산업1 슈터", "산업2 연맹홀 + 산업2 라이더", "산업3 연맹홀 + 산업3 파이터", "산업4 연맹홀 + 산업4 슈터", "산업5 연맹홀 + 산업5 라이더", "산업6 연맹홀 + 산업6 파이터", "산업7 연맹홀 + 산업7 슈터"],
             'labels': ["해제 전", "1성", "1.2", "1.4", "1.6", "1.8", "2성", "2.2", "2.4", "2.6", "2.8", "3성", "3.2", "3.4", "3.6", "3.8", "4성", "4.2", "4.4", "4.6", "4.8", "5성", "5성(1)", "5성(2)", "5성(3)", "Max"],
             'apc-steps': ["0 별", "1 별", "2 별", "3 별", "4 별(0.5)", "4 별(1.0)", "5 별(0.5)", "5 별(1.0)", "6 별(0.33)", "6 별(0.66)", "6 별(1.0)", "7 별(0.33)", "7 별(0.66)", "7 별(1.0)"]
         },
         en: {
             'nav-main': '🏠<br>Main', 'nav-calc': '📊<br>Calc', 'nav-info': '📜<br>Guide',
-            'label-server': 'SERVER', 'notice-title': 'SYNERGY 242', 'unit': ' Qty',
+            'clock-title': 'World & Server Time', 'label-server': 'SERVER', 'label-kor': 'KOREA', 'label-phl': 'PHILIPPINES', 'label-tur': 'TURKEY', 'label-fra': 'FRANCE', 'label-ind': 'INDIA', 'label-aus': 'AUSTRALIA', 'label-bra': 'BRAZIL', 'label-haw': 'HAWAII',
+            'notice-title': 'SYNERGY 242', 'notice-desc': 'Optimized for 242 & SYNERGY.', 'unit': ' Qty',
             'btn-tower-calc': 'Parts', 'btn-hero-calc': 'Hero', 'btn-apc-calc': 'APC Chip',
-            'tower-title': 'Parts Calc', 'hero-title': 'Hero Upgrade', 'apc-title': 'APC Chip Calc',
+            'tower-title': 'Parts Calc', 'tower-target-lbl': 'Target Ind. Level', 'cur-tower-lbl': 'Watch Tower', 'cur-guild-lbl': 'Alliance Hall', 'cur-shooter-lbl': 'Shooter Camp', 'cur-rider-lbl': 'Rider Camp', 'cur-fighter-lbl': 'Fighter Camp',
+            'hero-title': 'Hero Upgrade', 'hero-type-lbl': 'Type', 'opt-hero': 'Hero', 'opt-weapon': 'Weapon', 'opt-awaken': 'Awaken', 'hero-cur-lbl': 'Current Stage', 'hero-target-lbl': 'Target Stage',
+            'apc-title': 'APC Chip Calc', 'apc-cur-lbl': 'Current Star', 'apc-target-lbl': 'Target Star', 'apc-have-mat-lbl': 'Materials Owned',
+            'info-title': 'Guide', 'info-desc': 'Strategy guides coming soon...',
+            'pre-warn': '⚠️ Prerequisite: ', 'lv': 'Lv.', 'ind': 'Ind.',
+            'tower-pre': ["", "", "Lv1 Hall + Lv1 Shooter", "Lv2 Hall + Lv2 Rider", "Lv3 Hall + Lv3 Fighter", "Lv4 Hall + Lv4 Shooter", "Lv5 Hall + Lv5 Rider", "Lv6 Hall + Lv6 Fighter", "Lv7 Hall + Lv7 Shooter"],
             'labels': ["Locked", "1★", "1.2", "1.4", "1.6", "1.8", "2★", "2.2", "2.4", "2.6", "2.8", "3★", "3.2", "3.4", "3.6", "3.8", "4★", "4.2", "4.4", "4.6", "4.8", "5★", "5★(1)", "5★(2)", "5★(3)", "Max"],
             'apc-steps': ["Star 0", "Star 1", "Star 2", "Star 3", "Star 4(0.5)", "Star 4(1.0)", "Star 5(0.5)", "Star 5(1.0)", "Star 6(0.33)", "Star 6(0.66)", "Star 6(1.0)", "Star 7(0.33)", "Star 7(0.66)", "Star 7(1.0)"]
         }
     };
 
-    const towerData = { tower: [0, 900, 1100, 1300, 1550, 1850, 1500, 1600, 1750], guild: [0, 250, 250, 300, 350, 450, 350, 400, 500] };
-    const heroData = { 
-        hero: { unlock: 10, costs: [0, 1, 1, 2, 3, 3, 5, 5, 5, 5, 15, 15, 15, 15, 15, 50, 50, 50, 50, 50, 100, 100, 100, 100, 100, 100] }, 
-        weapon: { unlock: 10, costs: [0, 1, 1, 3, 5, 7, 7, 7, 7, 7, 15, 15, 15, 15, 15, 25, 25, 25, 25, 25, 35, 35, 35, 35, 35, 35] }, 
-        awaken: { unlock: 100, costs: [0, 50, 50, 50, 50, 100, 100, 100, 100, 100, 120, 120, 120, 120, 120, 150, 150, 150, 150, 150, 200, 200, 200, 200, 200, 300] } 
-    };
+    const towerData = { tower: [0, 900, 1100, 1300, 1550, 1850, 1500, 1600, 1750], guild: [0, 250, 250, 300, 350, 450, 350, 400, 500], camp: [0, 400, 450, 550, 650, 800, 600, 700, 800] };
+    const heroData = { hero: { unlock: 10, costs: [0, 1, 1, 2, 3, 3, 5, 5, 5, 5, 15, 15, 15, 15, 15, 50, 50, 50, 50, 50, 100, 100, 100, 100, 100, 100] }, weapon: { unlock: 10, costs: [0, 1, 1, 3, 5, 7, 7, 7, 7, 7, 15, 15, 15, 15, 15, 25, 25, 25, 25, 25, 35, 35, 35, 35, 35, 35] }, awaken: { unlock: 100, costs: [0, 50, 50, 50, 50, 100, 100, 100, 100, 100, 120, 120, 120, 120, 120, 150, 150, 150, 150, 150, 200, 200, 200, 200, 200, 300] } };
     const apcSingleCosts = [0, 1, 1, 2, 5, 5, 10, 10, 12, 12, 12, 15, 15, 15];
+    const CHIP_MAT_RATIO = 800;
 
     function setLang(lang) {
         currentLang = lang;
@@ -179,11 +175,11 @@
             const k = el.getAttribute('data-key');
             if (i18n[lang][k]) el.innerHTML = i18n[lang][k];
         });
-        refreshSelects(); updateClocks();
+        refreshSelects(); updateClocks(); calcTower(); calcHero(); calcApc();
     }
 
     function refreshSelects() {
-        const hL = i18n[currentLang]['labels'], aL = i18n[currentLang]['apc-steps'];
+        const hL = i18n[currentLang]['labels'], aL = i18n[currentLang]['apc-steps'], L = i18n[currentLang];
         const cs = document.getElementById('curStep'), ts = document.getElementById('targetStep'), ca = document.getElementById('curApc'), ta = document.getElementById('targetApc');
         const cv = cs.value||0, tv = ts.value||25, cav = ca.value||0, tav = ta.value||13;
         cs.innerHTML = ''; ts.innerHTML = ''; ca.innerHTML = ''; ta.innerHTML = '';
@@ -191,22 +187,26 @@
         aL.forEach((l, i) => { ca.add(new Option(l, i)); ta.add(new Option(l, i)); });
         cs.value = cv; ts.value = tv; ca.value = cav; ta.value = tav;
 
-        const tt = document.getElementById('towerTarget'), ct = document.getElementById('curTower'), cg = document.getElementById('curGuild');
-        const tt_v = tt.value||8, ct_v = ct.value||0;
-        tt.innerHTML = ''; ct.innerHTML = ''; cg.innerHTML = '';
+        const tt = document.getElementById('towerTarget'), ct = document.getElementById('curTower'), cg = document.getElementById('curGuild'), cs_c = document.getElementById('curShooter'), cr = document.getElementById('curRider'), cf = document.getElementById('curFighter');
+        const tt_v = tt.value||8, ct_v = ct.value||0, cg_v = cg.value||0, csc_v = cs_c.value||0, cr_v = cr.value||0, cf_v = cf.value||0;
+        tt.innerHTML = ''; ct.innerHTML = ''; cg.innerHTML = ''; cs_c.innerHTML = ''; cr.innerHTML = ''; cf.innerHTML = '';
         for(let i=0; i<=8; i++) {
-            if(i>0) tt.add(new Option('Ind.'+i, i));
-            ct.add(new Option('Lv.'+i, i)); cg.add(new Option('Lv.'+i, i));
+            if(i>0) tt.add(new Option(`${L.ind}${i}`, i));
+            ct.add(new Option(`${L.lv}${i}`, i)); cg.add(new Option(`${L.lv}${i}`, i));
+            cs_c.add(new Option(`${L.lv}${i}`, i)); cr.add(new Option(`${L.lv}${i}`, i)); cf.add(new Option(`${L.lv}${i}`, i));
         }
-        tt.value = tt_v; ct.value = ct_v;
+        tt.value = tt_v; ct.value = ct_v; cg.value = cg_v; cs_c.value = csc_v; cr.value = cr_v; cf.value = cf_v;
     }
 
     function updateClocks() {
         const now = new Date();
-        const zones = { 'kor': 'Asia/Seoul', 'haw': 'Pacific/Honolulu', 'bra': 'America/Sao_Paulo', 'ind': 'Asia/Kolkata', 'aus': 'Australia/Sydney' };
+        const zones = { 'kor': 'Asia/Seoul', 'phl': 'Asia/Manila', 'tur': 'Europe/Istanbul', 'fra': 'Europe/Paris', 'ind': 'Asia/Kolkata', 'aus': 'Australia/Sydney', 'bra': 'America/Sao_Paulo', 'haw': 'Pacific/Honolulu' };
         for (const [k, z] of Object.entries(zones)) {
-            document.getElementById(`date-${k}`).innerText = now.toLocaleDateString(currentLang=='ko'?'ko-KR':'en-US', { month:'short', day:'2-digit', weekday:'short', timeZone:z });
-            document.getElementById(`time-${k}`).innerText = now.toLocaleTimeString('ko-KR', { hour12:false, timeZone:z });
+            const dEl = document.getElementById(`date-${k}`), tEl = document.getElementById(`time-${k}`);
+            if(dEl && tEl) {
+                dEl.innerText = now.toLocaleDateString(currentLang=='ko'?'ko-KR':'en-US', { month:'short', day:'2-digit', weekday:'short', timeZone:z });
+                tEl.innerText = now.toLocaleTimeString('ko-KR', { hour12:false, timeZone:z });
+            }
         }
         const sTime = new Date(now.getTime() - (11 * 3600000));
         document.getElementById('date-server').innerText = sTime.toLocaleDateString(currentLang=='ko'?'ko-KR':'en-US', { month:'short', day:'2-digit', weekday:'short'});
@@ -216,7 +216,17 @@
 
     function calcTower() {
         const t = parseInt(document.getElementById('towerTarget').value), ct = parseInt(document.getElementById('curTower').value);
-        let total = 0; for(let i=ct+1; i<=t; i++) total += towerData.tower[i];
+        const cg = parseInt(document.getElementById('curGuild').value), cs = parseInt(document.getElementById('curShooter').value), cr = parseInt(document.getElementById('curRider').value), cf = parseInt(document.getElementById('curFighter').value);
+        document.getElementById('towerPreReq').innerText = t >= 2 ? i18n[currentLang]['pre-warn'] + i18n[currentLang]['tower-pre'][t] : "";
+        let total = 0;
+        for(let i=ct+1; i<=t; i++) total += towerData.tower[i];
+        if (t >= 2) {
+            for(let i=cg+1; i<=t-1; i++) total += towerData.guild[i];
+            const rs = (t<2)?0:([1,4,7].includes(t-1)?t-1:(t-1>7?7:(t-1>4?4:(t-1>1?1:0)))), rr = (t<2)?0:([2,5].includes(t-1)?t-1:(t-1>5?5:(t-1>2?2:0))), rf = (t<2)?0:([3,6].includes(t-1)?t-1:(t-1>6?6:(t-1>3?3:0)));
+            for(let i=cs+1; i<=rs; i++) total += towerData.camp[i];
+            for(let i=cr+1; i<=rr; i++) total += towerData.camp[i];
+            for(let i=cf+1; i<=rf; i++) total += towerData.camp[i];
+        }
         document.getElementById('towerTotal').innerText = total.toLocaleString() + i18n[currentLang]['unit'];
     }
 
@@ -236,7 +246,7 @@
     function showSection(id) { document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); document.getElementById('section-'+id).classList.add('active'); }
     function showCalc(id) { document.querySelectorAll('.calc-sub').forEach(s => s.style.display='none'); document.getElementById('calc-'+id).style.display='block'; }
 
-    window.onload = () => { setLang('ko'); calcTower(); calcHero(); calcApc(); };
+    window.onload = () => { setLang('ko'); };
 </script>
 </body>
 </html>
