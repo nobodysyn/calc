@@ -11,7 +11,7 @@
     <link rel="icon" href="logo.jpg">
 
     <style>
-        :root { --primary: #3498db; --bg: #121212; --card: #1e1e1e; --text: #e0e0e0; --accent: #e67e22; --danger: #ff4d4d; }
+        :root { --primary: #3498db; --bg: #121212; --card: #1e1e1e; --text: #e0e0e0; --accent: #e67e22; --danger: #ff4d4d; --success: #2ecc71; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; overflow: hidden; }
         .sidebar { width: 80px; background: #000; display: flex; flex-direction: column; align-items: center; padding-top: 20px; border-left: 1px solid #333; order: 2; }
         .nav-item { color: #888; cursor: pointer; margin-bottom: 25px; font-size: 0.8em; text-align: center; transition: 0.3s; }
@@ -24,11 +24,11 @@
         .lang-switch { position: absolute; top: 20px; left: 20px; z-index: 100; display: flex; gap: 5px; }
         .lang-btn { background: #333; border: 1px solid #444; color: #fff; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px; }
         .lang-btn.active { background: var(--primary); border-color: var(--primary); }
-        .clock-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 25px; }
-        .clock-card { background: var(--card); padding: 15px 10px; border-radius: 12px; text-align: center; border-top: 3px solid var(--primary); }
-        .clock-date { font-size: 0.75em; color: var(--primary); margin-bottom: 5px; font-weight: bold; }
-        .clock-time { font-size: 1.2em; font-weight: bold; color: #fff; }
-        .clock-label { font-size: 0.7em; color: #aaa; margin-top: 6px; }
+        .clock-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(135px, 1fr)); gap: 8px; margin-bottom: 25px; }
+        .clock-card { background: var(--card); padding: 12px 8px; border-radius: 12px; text-align: center; border-top: 3px solid var(--primary); }
+        .clock-date { font-size: 0.75em; color: var(--primary); margin-bottom: 4px; font-weight: bold; }
+        .clock-time { font-size: 1.15em; font-weight: bold; color: #fff; font-family: 'Courier New', monospace; }
+        .clock-label { font-size: 0.65em; color: #aaa; margin-top: 4px; letter-spacing: 0.5px; }
         .card { background: var(--card); padding: 20px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
         h2 { color: var(--primary); margin-top: 0; font-size: 1.4em; }
         label { display: block; margin-top: 10px; font-size: 0.85em; color: #bbb; }
@@ -39,6 +39,14 @@
         .calc-btn { flex: 0 0 auto; background: #333; border: none; color: #fff; padding: 10px 15px; border-radius: 8px; cursor: pointer; transition: 0.2s; white-space: nowrap; }
         .calc-btn.active { background: var(--primary); }
         .pre-req { color: var(--danger); font-size: 0.82em; margin-top: 10px; font-weight: bold; border-left: 3px solid var(--danger); padding-left: 10px; min-height: 1.2em; }
+        
+        /* 가이드 탭 전용 */
+        .guide-item { border-bottom: 1px solid #333; padding: 15px 0; }
+        .guide-item:last-child { border: none; }
+        .guide-title { font-size: 1.1em; color: var(--accent); font-weight: bold; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .guide-content { font-size: 0.9em; color: #ccc; line-height: 1.6; }
+        .power-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0; background: #252525; padding: 10px; border-radius: 8px; }
+        .warn-text { color: var(--danger); font-weight: bold; margin-top: 5px; }
     </style>
 </head>
 <body>
@@ -66,6 +74,7 @@
                 <div class="clock-card"><div class="clock-date" id="date-phl">-</div><div class="clock-time" id="time-phl">00:00:00</div><div class="clock-label" data-key="label-phl">PHILIPPINES</div></div>
                 <div class="clock-card"><div class="clock-date" id="date-tur">-</div><div class="clock-time" id="time-tur">00:00:00</div><div class="clock-label" data-key="label-tur">TURKEY</div></div>
                 <div class="clock-card"><div class="clock-date" id="date-fra">-</div><div class="clock-time" id="time-fra">00:00:00</div><div class="clock-label" data-key="label-fra">FRANCE</div></div>
+                <div class="clock-card"><div class="clock-date" id="date-nzl">-</div><div class="clock-time" id="time-nzl">00:00:00</div><div class="clock-label" data-key="label-nzl">NEW ZEALAND</div></div>
                 <div class="clock-card"><div class="clock-date" id="date-ind">-</div><div class="clock-time" id="time-ind">00:00:00</div><div class="clock-label" data-key="label-ind">INDIA</div></div>
                 <div class="clock-card"><div class="clock-date" id="date-aus">-</div><div class="clock-time" id="time-aus">00:00:00</div><div class="clock-label" data-key="label-aus">AUSTRALIA</div></div>
                 <div class="clock-card"><div class="clock-date" id="date-bra">-</div><div class="clock-time" id="time-bra">00:00:00</div><div class="clock-label" data-key="label-bra">BRAZIL</div></div>
@@ -80,7 +89,6 @@
                 <button class="calc-btn" id="btn-hero-tab" onclick="showCalc('hero')" data-key="btn-hero-calc">영웅 승급</button>
                 <button class="calc-btn" id="btn-apc-tab" onclick="showCalc('apc')" data-key="btn-apc-calc">APC 칩</button>
             </div>
-
             <div id="calc-tower" class="calc-sub">
                 <div class="card">
                     <h2 data-key="tower-title">Precision Parts</h2>
@@ -96,7 +104,6 @@
                     <div class="result-box"><div class="total-val" id="towerTotal">0</div></div>
                 </div>
             </div>
-
             <div id="calc-hero" class="calc-sub" style="display:none;">
                 <div class="card">
                     <h2 data-key="hero-title">Hero Upgrade</h2>
@@ -111,7 +118,6 @@
                     <div class="result-box"><div class="total-val" id="heroTotal">0</div></div>
                 </div>
             </div>
-
             <div id="calc-apc" class="calc-sub" style="display:none;">
                 <div class="card">
                     <h2 data-key="apc-title">APC Chips</h2>
@@ -125,7 +131,22 @@
         </div>
 
         <div id="section-info" class="section">
-            <div class="card"><h2 data-key="info-title">Guide</h2><p data-key="info-desc">연맹 공략 준비 중...</p></div>
+            <div class="card">
+                <h2 data-key="info-title">Alliance Guide</h2>
+                <div class="guide-item">
+                    <div class="guide-title">🐕 <span data-key="z-dog-title">좀비견 (광기 45레벨 기준)</span></div>
+                    <div class="guide-content">
+                        <p data-key="z-dog-desc">각 난이도별 45레벨 투력 확인해 주세요!</p>
+                        <div class="power-grid">
+                            <div>광기 3 (Insanity 3): <b>400M</b></div>
+                            <div>광기 4 (Insanity 4): <b>1.1G</b></div>
+                            <div>광기 5 (Insanity 5): <b>2.2G</b></div>
+                            <div>광기 6 (Insanity 6): <b>4.5G</b></div>
+                        </div>
+                        <div class="warn-text" data-key="z-dog-warn">⚠️ 주의사항: 45레벨까지는 본인 솔로 집결과 2·3·4군으로 스스로 클리어해야 합니다.</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -134,13 +155,13 @@
     const i18n = {
         ko: {
             'nav-main': '🏠<br>메인', 'nav-calc': '📊<br>계산기', 'nav-info': '📜<br>공략',
-            'clock-title': 'World & Server Time', 'label-server': 'SERVER', 'label-kor': 'KOREA', 'label-phl': 'PHILIPPINES', 'label-tur': 'TURKEY', 'label-fra': 'FRANCE', 'label-ind': 'INDIA', 'label-aus': 'AUSTRALIA', 'label-bra': 'BRAZIL', 'label-haw': 'HAWAII',
+            'clock-title': 'World & Server Time', 'label-server': 'SERVER', 'label-kor': 'KOREA', 'label-phl': 'PHILIPPINES', 'label-tur': 'TURKEY', 'label-fra': 'FRANCE', 'label-nzl': 'NEW ZEALAND', 'label-ind': 'INDIA', 'label-aus': 'AUSTRALIA', 'label-bra': 'BRAZIL', 'label-haw': 'HAWAII',
             'notice-title': 'SYNERGY 242', 'notice-desc': 'Optimized for 242 & SYNERGY.', 'unit': ' 개',
             'btn-tower-calc': '부품', 'btn-hero-calc': '영웅 승급', 'btn-apc-calc': 'APC 칩',
             'tower-title': '부품 계산기', 'tower-target-lbl': '목표 산업 레벨', 'cur-tower-lbl': '현재 타워', 'cur-guild-lbl': '현재 연맹홀', 'cur-shooter-lbl': '현재 슈터', 'cur-rider-lbl': '현재 라이더', 'cur-fighter-lbl': '현재 파이터',
             'hero-title': '영웅 승급', 'hero-type-lbl': '유형', 'opt-hero': '영웅', 'opt-weapon': '전용무기', 'opt-awaken': '무기각성', 'hero-cur-lbl': '현재 단계', 'hero-target-lbl': '목표 단계',
             'apc-title': 'APC 칩 계산기', 'apc-cur-lbl': '현재 별', 'apc-target-lbl': '목표 별', 'apc-have-mat-lbl': '보유 고급원료',
-            'info-title': 'Guide', 'info-desc': '연맹 공략 준비 중...',
+            'info-title': '연맹 가이드', 'z-dog-title': '좀비견 (광기 45레벨 기준)', 'z-dog-desc': '각 난이도별 45레벨 투력 확인해 주세요!', 'z-dog-warn': '⚠️ 주의사항: 45레벨까지는 본인 솔로 집결과 2·3·4군으로 스스로 클리어해야 합니다.',
             'pre-warn': '⚠️ 선행 조건: ', 'lv': '레벨', 'ind': '산업',
             'tower-pre': ["", "", "산업1 연맹홀 + 산업1 슈터", "산업2 연맹홀 + 산업2 라이더", "산업3 연맹홀 + 산업3 파이터", "산업4 연맹홀 + 산업4 슈터", "산업5 연맹홀 + 산업5 라이더", "산업6 연맹홀 + 산업6 파이터", "산업7 연맹홀 + 산업7 슈터"],
             'labels': ["해제 전", "1성", "1.2", "1.4", "1.6", "1.8", "2성", "2.2", "2.4", "2.6", "2.8", "3성", "3.2", "3.4", "3.6", "3.8", "4성", "4.2", "4.4", "4.6", "4.8", "5성", "5성(1)", "5성(2)", "5성(3)", "Max"],
@@ -148,15 +169,15 @@
         },
         en: {
             'nav-main': '🏠<br>Main', 'nav-calc': '📊<br>Calc', 'nav-info': '📜<br>Guide',
-            'clock-title': 'World & Server Time', 'label-server': 'SERVER', 'label-kor': 'KOREA', 'label-phl': 'PHILIPPINES', 'label-tur': 'TURKEY', 'label-fra': 'FRANCE', 'label-ind': 'INDIA', 'label-aus': 'AUSTRALIA', 'label-bra': 'BRAZIL', 'label-haw': 'HAWAII',
+            'clock-title': 'World & Server Time', 'label-server': 'SERVER', 'label-kor': 'KOREA', 'label-phl': 'PHILIPPINES', 'label-tur': 'TURKEY', 'label-fra': 'FRANCE', 'label-nzl': 'NEW ZEALAND', 'label-ind': 'INDIA', 'label-aus': 'AUSTRALIA', 'label-bra': 'BRAZIL', 'label-haw': 'HAWAII',
             'notice-title': 'SYNERGY 242', 'notice-desc': 'Optimized for 242 & SYNERGY.', 'unit': ' Qty',
             'btn-tower-calc': 'Parts', 'btn-hero-calc': 'Hero', 'btn-apc-calc': 'APC Chip',
-            'tower-title': 'Parts Calc', 'tower-target-lbl': 'Target Ind. Level', 'cur-tower-lbl': 'Watch Tower', 'cur-guild-lbl': 'Alliance Hall', 'cur-shooter-lbl': 'Shooter Camp', 'cur-rider-lbl': 'Rider Camp', 'cur-fighter-lbl': 'Fighter Camp',
+            'tower-title': 'Parts Calc', 'tower-target-lbl': 'Target Ind. Level', 'cur-tower-lbl': 'Watch Tower', 'cur-guild-lbl': 'Guild', 'cur-shooter-lbl': 'Shooter Camp', 'cur-rider-lbl': 'Rider Camp', 'cur-fighter-lbl': 'Fighter Camp',
             'hero-title': 'Hero Upgrade', 'hero-type-lbl': 'Type', 'opt-hero': 'Hero', 'opt-weapon': 'Weapon', 'opt-awaken': 'Awaken', 'hero-cur-lbl': 'Current Stage', 'hero-target-lbl': 'Target Stage',
             'apc-title': 'APC Chip Calc', 'apc-cur-lbl': 'Current Star', 'apc-target-lbl': 'Target Star', 'apc-have-mat-lbl': 'Materials Owned',
-            'info-title': 'Guide', 'info-desc': 'Strategy guides coming soon...',
+            'info-title': 'Alliance Guide', 'z-dog-title': 'Zombie Dog (Lv. 45 Base)', 'z-dog-desc': 'Please check the required Power for Lv. 45 at each difficulty!', 'z-dog-warn': '⚠️ Note: Up to Lv. 45, you must clear it yourself with solo rallies and 2nd/3rd/4th squads.',
             'pre-warn': '⚠️ Prerequisite: ', 'lv': 'Lv.', 'ind': 'Ind.',
-            'tower-pre': ["", "", "Lv1 Hall + Lv1 Shooter", "Lv2 Hall + Lv2 Rider", "Lv3 Hall + Lv3 Fighter", "Lv4 Hall + Lv4 Shooter", "Lv5 Hall + Lv5 Rider", "Lv6 Hall + Lv6 Fighter", "Lv7 Hall + Lv7 Shooter"],
+            'tower-pre': ["", "", "Ind.1 Guild + Ind.1 Shooter", "Ind.2 Guild + Ind.2 Rider", "Ind.3 Guild + Ind.3 Fighter", "Ind.4 Guild + Ind.4 Shooter", "Ind.5 Guild + Ind.5 Rider", "Ind.6 Guild + Ind.6 Fighter", "Ind.7 Guild + Ind.7 Shooter"],
             'labels': ["Locked", "1★", "1.2", "1.4", "1.6", "1.8", "2★", "2.2", "2.4", "2.6", "2.8", "3★", "3.2", "3.4", "3.6", "3.8", "4★", "4.2", "4.4", "4.6", "4.8", "5★", "5★(1)", "5★(2)", "5★(3)", "Max"],
             'apc-steps': ["Star 0", "Star 1", "Star 2", "Star 3", "Star 4(0.5)", "Star 4(1.0)", "Star 5(0.5)", "Star 5(1.0)", "Star 6(0.33)", "Star 6(0.66)", "Star 6(1.0)", "Star 7(0.33)", "Star 7(0.66)", "Star 7(1.0)"]
         }
@@ -165,7 +186,6 @@
     const towerData = { tower: [0, 900, 1100, 1300, 1550, 1850, 1500, 1600, 1750], guild: [0, 250, 250, 300, 350, 450, 350, 400, 500], camp: [0, 400, 450, 550, 650, 800, 600, 700, 800] };
     const heroData = { hero: { unlock: 10, costs: [0, 1, 1, 2, 3, 3, 5, 5, 5, 5, 15, 15, 15, 15, 15, 50, 50, 50, 50, 50, 100, 100, 100, 100, 100, 100] }, weapon: { unlock: 10, costs: [0, 1, 1, 3, 5, 7, 7, 7, 7, 7, 15, 15, 15, 15, 15, 25, 25, 25, 25, 25, 35, 35, 35, 35, 35, 35] }, awaken: { unlock: 100, costs: [0, 50, 50, 50, 50, 100, 100, 100, 100, 100, 120, 120, 120, 120, 120, 150, 150, 150, 150, 150, 200, 200, 200, 200, 200, 300] } };
     const apcSingleCosts = [0, 1, 1, 2, 5, 5, 10, 10, 12, 12, 12, 15, 15, 15];
-    const CHIP_MAT_RATIO = 800;
 
     function setLang(lang) {
         currentLang = lang;
@@ -200,17 +220,17 @@
 
     function updateClocks() {
         const now = new Date();
-        const zones = { 'kor': 'Asia/Seoul', 'phl': 'Asia/Manila', 'tur': 'Europe/Istanbul', 'fra': 'Europe/Paris', 'ind': 'Asia/Kolkata', 'aus': 'Australia/Sydney', 'bra': 'America/Sao_Paulo', 'haw': 'Pacific/Honolulu' };
+        const zones = { 'kor': 'Asia/Seoul', 'phl': 'Asia/Manila', 'tur': 'Europe/Istanbul', 'fra': 'Europe/Paris', 'nzl': 'Pacific/Auckland', 'ind': 'Asia/Kolkata', 'aus': 'Australia/Sydney', 'bra': 'America/Sao_Paulo', 'haw': 'Pacific/Honolulu' };
         for (const [k, z] of Object.entries(zones)) {
             const dEl = document.getElementById(`date-${k}`), tEl = document.getElementById(`time-${k}`);
             if(dEl && tEl) {
                 dEl.innerText = now.toLocaleDateString(currentLang=='ko'?'ko-KR':'en-US', { month:'short', day:'2-digit', weekday:'short', timeZone:z });
-                tEl.innerText = now.toLocaleTimeString('ko-KR', { hour12:false, timeZone:z });
+                tEl.innerText = now.toLocaleTimeString('en-GB', { hour12:false, timeZone:z });
             }
         }
         const sTime = new Date(now.getTime() - (11 * 3600000));
         document.getElementById('date-server').innerText = sTime.toLocaleDateString(currentLang=='ko'?'ko-KR':'en-US', { month:'short', day:'2-digit', weekday:'short'});
-        document.getElementById('time-server').innerText = sTime.toLocaleTimeString('ko-KR', { hour12:false });
+        document.getElementById('time-server').innerText = sTime.toLocaleTimeString('en-GB', { hour12:false });
     }
     setInterval(updateClocks, 1000);
 
@@ -218,8 +238,7 @@
         const t = parseInt(document.getElementById('towerTarget').value), ct = parseInt(document.getElementById('curTower').value);
         const cg = parseInt(document.getElementById('curGuild').value), cs = parseInt(document.getElementById('curShooter').value), cr = parseInt(document.getElementById('curRider').value), cf = parseInt(document.getElementById('curFighter').value);
         document.getElementById('towerPreReq').innerText = t >= 2 ? i18n[currentLang]['pre-warn'] + i18n[currentLang]['tower-pre'][t] : "";
-        let total = 0;
-        for(let i=ct+1; i<=t; i++) total += towerData.tower[i];
+        let total = 0; for(let i=ct+1; i<=t; i++) total += towerData.tower[i];
         if (t >= 2) {
             for(let i=cg+1; i<=t-1; i++) total += towerData.guild[i];
             const rs = (t<2)?0:([1,4,7].includes(t-1)?t-1:(t-1>7?7:(t-1>4?4:(t-1>1?1:0)))), rr = (t<2)?0:([2,5].includes(t-1)?t-1:(t-1>5?5:(t-1>2?2:0))), rf = (t<2)?0:([3,6].includes(t-1)?t-1:(t-1>6?6:(t-1>3?3:0)));
@@ -243,8 +262,8 @@
         document.getElementById('apcTotal').innerText = total.toLocaleString() + i18n[currentLang]['unit'];
     }
 
-    function showSection(id) { document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); document.getElementById('section-'+id).classList.add('active'); }
-    function showCalc(id) { document.querySelectorAll('.calc-sub').forEach(s => s.style.display='none'); document.getElementById('calc-'+id).style.display='block'; }
+    function showSection(id) { document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); document.getElementById('section-'+id).classList.add('active'); event.currentTarget.classList.add('active'); }
+    function showCalc(id) { document.querySelectorAll('.calc-sub').forEach(s => s.style.display='none'); document.querySelectorAll('.calc-btn').forEach(b => b.classList.remove('active')); document.getElementById('calc-'+id).style.display='block'; event.currentTarget.classList.add('active'); }
 
     window.onload = () => { setLang('ko'); };
 </script>
